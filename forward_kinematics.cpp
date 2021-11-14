@@ -15,7 +15,6 @@ float l2 = 1;
 
 void chatterCallback(const sensor_msgs::JointState::ConstPtr &msg)
 {
-    
      float q1=msg->position[0];
      float q2=msg->position[1];
      float q3=msg->position[2];
@@ -25,7 +24,8 @@ void chatterCallback(const sensor_msgs::JointState::ConstPtr &msg)
 int main(){
   cosine = cos(q1);
   sine = sin(q1);
-
+  c12 = cos(q1 + q2);
+  s12 = sin(q1 + q2);
 
   float transform_matrix[4][4] = {{c12, -1*s12, 0, l2*c12 + l2*cosine}, {s12, c12, 0, l2*s12 + l2*sine}, {0, 0, 1, q3+l1}, {0, 0, 0, 1}};
   
@@ -38,9 +38,9 @@ int main(){
     cout<<endl;  // when the inner loop is done, go to a new line
     }
     
-    cout<< "x: " <<transform_matrix[0][3] <<endl;
-    cout<< "y: " <<transform_matrix[1][3] <<endl;
-    cout<< "z: " <<transform_matrix[2][3] <<endl;
+    //cout<< "x: " <<transform_matrix[0][3] <<endl;
+    //cout<< "y: " <<transform_matrix[1][3] <<endl;
+    //cout<< "z: " <<transform_matrix[2][3] <<endl;
     
     return 0;  // return 0 to the OS.
 }
