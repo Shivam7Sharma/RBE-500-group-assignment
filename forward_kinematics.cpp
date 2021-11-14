@@ -1,7 +1,9 @@
 #include "ros/ros.h"
-#include "std_msgs/String.h" //not needed now, may need later?
+#include "std_msgs/String.h"
+#include "std_msgs/Float64.h"
 #include "sensor_msgs/JointState.h"
 #include <iostream>
+#include <sstream>
 using namespace std;
 #include "math.h"  
 
@@ -21,26 +23,44 @@ void chatterCallback(const sensor_msgs::JointState::ConstPtr &msg)
 }
 
 
-int main(){
-  cosine = cos(q1);
-  sine = sin(q1);
-  c12 = cos(q1 + q2);
-  s12 = sin(q1 + q2);
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "talker");
+  ros::NodeHandle n;
+  ros::Publisher chatter_pub = n.advertise<std_msgs::Float64>("forward_kinematics", 1000);
+  ros::Rate loop_rate(10);
 
-  float transform_matrix[4][4] = {{c12, -1*s12, 0, l2*c12 + l2*cosine}, {s12, c12, 0, l2*s12 + l2*sine}, {0, 0, 1, q3+l1}, {0, 0, 0, 1}};
-  
-  for(int x=0;x<4;x++)  // loop 4 times for four lines
-    {
-        for(int y=0;y<4;y++)  // loop for the four elements on the line
-        {
-            cout <<transform_matrix[x][y] << ", ";  // display the current element out of the array
-        }
-    cout<<endl;  // when the inner loop is done, go to a new line
-    }
+  while (ros::ok())
+  {
+    cosine = cos(q1);
+    sine = sin(q1);
+    c12 = cos(q1 + q2);
+    s12 = sin(q1 + q2);
+
+    float transform_matrix[4][4] = {{c12, -1*s12, 0, l2*c12 + l2*cosine}, {s12, c12, 0, l2*s12 + l2*sine}, {0, 0, 1, q3+l1}, {0, 0, 0, 1}};
     
-    //cout<< "x: " <<transform_matrix[0][3] <<endl;
-    //cout<< "y: " <<transform_matrix[1][3] <<endl;
-    //cout<< "z: " <<transform_matrix[2][3] <<endl;
-    
-    return 0;  // return 0 to the OS.
+    std_msgs::Float64 x;
+    std_msgs::Float64 y;
+    std_msgs::Float64 z;
+
+    //x, y, and z values in the matrix
+    x.data = transform_matrix[0][3];
+    y.data = transform_matrix[1][3];
+    z.data = transform_matrix[2][3];
+
+    //Message publised with talker
+    ROS_INFO("Calculating forward kinematics");
+
+    //x, y, and z values published to topic
+    chatter_pub.publish(x);
+    chatter_pub.publish(y);
+    chatter_pub.publish(z);
+
+    ros::spinOnce();
+
+    loop_rate.sleep();
+
+  }
+
+  return 0;
 }
