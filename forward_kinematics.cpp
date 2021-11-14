@@ -1,10 +1,11 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h" //not needed now, may need later?
+#include "sensor_msgs/JointState.h"
 #include <iostream>
 using namespace std;
 #include "math.h"  
 
-float q0, q2, q3;
+float q1, q2, q3;
 float cosine, sine;
 float c12, s12; 
 float transform_matrix[4][4];
@@ -12,22 +13,21 @@ float transform_matrix[4][4];
 float l1 = 1;
 float l2 = 1;
 
+void chatterCallback(const sensor_msgs::JointState::ConstPtr &msg)
+{
+    
+     float q1=msg->position[0];
+     float q2=msg->position[1];
+     float q3=msg->position[2];
+}
+
 
 int main(){
-  cout<< "Joint 1: ";
-  cin>> q0;
-
-  cout<< "Joint 2: ";
-  cin>> q2;
-
-  cout<< "Joint 3: ";
-  cin>> q3;
-
-  cosine = cos(q0);
-  sine = sin(q0);
+  cosine = cos(q1);
+  sine = sin(q1);
 
 
-  float transform_matrix[4][4] = {{c12, -s12, 0, l2*c12 + l2*cosine}, {s12, c12, 0, l2*s12 + l2*sine}, {0, 0, 1, q3+l1}, {0, 0, 0, 1}};
+  float transform_matrix[4][4] = {{c12, -1*s12, 0, l2*c12 + l2*cosine}, {s12, c12, 0, l2*s12 + l2*sine}, {0, 0, 1, q3+l1}, {0, 0, 0, 1}};
   
   for(int x=0;x<4;x++)  // loop 4 times for four lines
     {
