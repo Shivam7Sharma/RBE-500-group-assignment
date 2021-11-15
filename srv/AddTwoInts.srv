@@ -1,7 +1,0 @@
-int64 x
-int64 y
-int64 z
----
-int64 q1
-int64 q2
-int64 q3
