@@ -59,7 +59,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
-   AddTwoInts.srv
+   inverse_kinematics_.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -196,11 +196,9 @@ add_dependencies(listener beginner_tutorials_generate_messages_cpp)
 #   PATTERN ".svn" EXCLUDE
 # )
 
-catkin_install_python(PROGRAMS scripts/add_two_ints_server.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
 
-catkin_install_python(PROGRAMS scripts/add_two_ints_server.py scripts/add_two_ints_client.py
+
+catkin_install_python(PROGRAMS scripts/inverse_kinematics_server.py scripts/inverse_kinematics_client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
