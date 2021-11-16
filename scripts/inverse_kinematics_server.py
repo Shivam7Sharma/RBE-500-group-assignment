@@ -11,10 +11,10 @@ def inverse_kinematics(req):
     l1 =1
     l2 = 1
     l3 = 1
-    r = (req.x*req.x)+(req.y*req.y)
-    D = (r-(l2*l2)-(l3*l3))/(2*l2*l3)
-    q1 = math.atan(math.sqrt(1-(D*D))/D) - math.acos((r+(l2*l2)-(l3*l3))/(2*l2*r))
-    q2 = math.atan(math.sqrt(1-(D*D))/D)
+    r2 = (req.x*req.x)+(req.y*req.y)
+    D = (r2-(l2*l2)-(l3*l3))/(2*l2*l3)
+    q1 = math.atan2(math.sqrt(1-(D*D)),D) - math.atan2((l3*math.sin(q2)),(l2+l3*math.cos(q2)))
+    q2 = math.atan2(math.sqrt(1-(D*D)),D)
     q3 = req.z
     # q1=3
     # q2=-1
