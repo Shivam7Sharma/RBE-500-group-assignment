@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import sys
 import rospy
-from rbe500project.srv import *
+from group.srv import *
 import numpy as np
 import math
 
@@ -12,20 +12,22 @@ def inverse_kinematics_client(x, y,z):
     rospy.wait_for_service('inversekinematics')
     try:
         inversekinematics = rospy.ServiceProxy('inversekinematics', inverse_kinematics_)
-        resp1 = inversekinematics(x, y,z)
+        print(type(x))
+        resp1 = inversekinematics(x,y,z)
         my_array = np.array([resp1.q1,resp1.q2,resp1.q3])
+        print(resp1)
         return my_array
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 
 def usage():
-    return "%s [x y]"%sys.argv[0]
+    return "%s [x y z]"%sys.argv[0]
 
 if __name__ == "__main__":
     if len(sys.argv) == 4:
-        x = int(sys.argv[1])
-        y = int(sys.argv[2])
-        z= int(sys.argv[3])
+        x = float(sys.argv[1])
+        y = float(sys.argv[2])
+        z= float(sys.argv[3])
     else:
         print(usage())
         sys.exit(1)
