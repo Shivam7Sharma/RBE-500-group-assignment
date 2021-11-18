@@ -1,30 +1,37 @@
 #!/usr/bin/env python
-
-from __future__ import print_function
-
-from rbe500project.srv import inverse_kinematics_,inverse_kinematics_Response
+from group.srv import inverse_kinematics_,inverse_kinematics_Response #change the package name(group.srv)
 import rospy
 import math
+import numpy as np
 
-def inverse_kinematics(req):
-    print("Returning the q1, q2 and q3 for [%s  %s  %s] values of "%(req.x, req.y, req.z))
-    l1 =1
+def ik_service(req):
+    #print("Returning the q1, q2 and q3 for [%s  %s  %s] values of "%(req.x, req.y, req.z))
+    l1 = 1
     l2 = 1
     l3 = 1
-    r2 = (req.x*req.x)+(req.y*req.y)
-    D = (r2-(l2*l2)-(l3*l3))/(2*l2*l3)
-    q1 = math.atan2(math.sqrt(1-(D*D)),D) - math.atan2((l3*math.sin(q2)),(l2+l3*math.cos(q2)))
-    q2 = math.atan2(math.sqrt(1-(D*D)),D)
-    q3 = req.z
-    # q1=3
-    # q2=-1
-    # q3=2
-
+    x = req.x
+    y = req.y
+    z = req.z
+    r = math.sqrt((x**2)+(y**2))
+    alpha = math.atan2(y,x)
+    D = (r**2-(l2**2)-(l3**2))/(2*l2*l3)
+    q3 = (z - l1)
+    #print('joint3:',q3)
+    sq = math.sqrt(1-(D**2))
+    q2 = math.atan2(sq,D)
+    #print('joint2 :',q2)
+    a1 = l3*math.sin(q2)
+    a2 = l2+(l3*math.cos(q2))
+    beta = math.atan2(a1,a2)
+    q1 = (alpha - beta)
+    q1 = np.rad2deg(q1)
+    q2 = np.rad2deg(q2)
+    print('[q1,q2,q3] =',q1,q2,q3)
     return inverse_kinematics_Response(q1,q2,q3)
 
 def inverse_kinematics_server():
     rospy.init_node('inverse_kinematics_server')
-    s = rospy.Service('inversekinematics', inverse_kinematics_, inverse_kinematics)
+    s = rospy.Service('inversekinematics', inverse_kinematics_, ik_service)
     print("Ready to find the inverse kinematics")
     rospy.spin()
 
