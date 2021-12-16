@@ -56,8 +56,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate services in the 'srv' folder
  add_service_files(
-   FILES
-   inverse_kinematics_.srv
+  FILES
+  inverse_kinematics_.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -68,10 +68,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
+ generate_messages(
    DEPENDENCIES
    std_msgs
-)
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -105,7 +105,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES group
-  CATKIN_DEPENDS message_runtime rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -128,6 +128,15 @@ include_directories(
 add_executable(forward_kinematics src/forward_kinematics.cpp)
 target_link_libraries(forward_kinematics ${catkin_LIBRARIES})
 add_dependencies(forward_kinematics group_gencpp)
+
+add_executable(velocity_fk src/velocity_fk.cpp)
+target_link_libraries(velocity_fk ${catkin_LIBRARIES})
+add_dependencies(velocity_fk group_gencpp)
+
+catkin_install_python(PROGRAMS scripts/inverse_kinematics_client.py scripts/velocity_fk.py 
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -167,12 +176,6 @@ add_dependencies(forward_kinematics group_gencpp)
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
-
-catkin_install_python(PROGRAMS 
-	scripts/inverse_kinematics_client.py
-	scripts/inverse_kinematics_server.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
@@ -214,3 +217,4 @@ catkin_install_python(PROGRAMS
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
