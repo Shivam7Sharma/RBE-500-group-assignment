@@ -34,4 +34,11 @@ This is a service server-service client implementation.
 Test your node with the “rosservice call” command. Take the screen shot together and include it 
 to your report. 
  
- Be sure to submit your code. 
+ Be sure to submit your code.
+
+
+Part 2 :
+//here
+
+Part 3:
+//here
